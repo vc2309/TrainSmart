@@ -1,36 +1,9 @@
-
 let video;
 let poseNet;
 let poses = [];
 let elbow_array = [];
 let bcurl = true;
-let BicepCurl = class {
-  
-  constructor(){
-    this.closing = true;
-    this.last_angle = 0;
-    this.rep = 0;
-    this.start_ = 150;
-    this.end_ = 60;
-  }
-
-  start_point(angle)
-  {
-    return this.start_ <= angle;
-  }
-
-  track_motion(angle)
-  {
-    if (angle>this.last_angle) //opening up
-    {
-      if (!this.closing){ //it's already opening
-        // 1. check if its passed the po
-
-      }
-    }
-  }
-
-}
+let angles = [];
 let exercise = null;
 function setup() {
   createCanvas(710, 400);
@@ -43,7 +16,6 @@ function setup() {
   fingers.hide(); // by default video shows up in separate dom
                   // element. hide it and draw it to the canvas
                   // instead
-
   exercise = new BicepCurl();
   poseNet = ml5.poseNet(fingers, modelReady);
 
@@ -58,9 +30,15 @@ function draw() {
   image(fingers, 0, 0, width, height); // draw the video frame to canvas
   drawKeypoints();
   drawSkeleton();
-  
-  // if()
-
+  if(angles.length<50)
+  {
+    angles.push(getAngle());
+  }
+  else
+  {
+    exercise.track_motion(angles);
+    angles = [];
+  }
   
 }
 
