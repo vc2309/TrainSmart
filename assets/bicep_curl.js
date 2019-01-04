@@ -5,8 +5,8 @@ class BicepCurl
     this.closing = true;
     this.last_angle = 0;
     this.rep = 0;
-    this.start_ = 150;
-    this.end_ = 60;
+    this.start_ = 140;
+    this.end_ = 65;
     this.midpoint_achieved_ = false;
     this.start_achieved_ = false;
   }
@@ -17,6 +17,8 @@ class BicepCurl
     var minima = Number.MAX_SAFE_INTEGER;
     var opening = false;
     var closing = false;
+    var last_open = undefined;
+    this.last_angle = angles[angles.length - 1];
     for (var i = angles.length - 1; i >= 0; i--) 
     {  
       if(maxima<angles[i])
@@ -33,10 +35,12 @@ class BicepCurl
         if(angles[i]<=angles[i+1])
         {
           opening = true;
+          last_open = true;
         }
         else
         {
           closing = true;
+          last_open = false;
         }
       } 
     }
@@ -56,7 +60,6 @@ class BicepCurl
     if (opening && closing) type = this.start_ <= maxima ? 3 : (this.end_ >= minima ? 4 : 7)  ;
     else if (opening) type = this.start_ <= maxima ? 2 : 1;
     else type = this.end_ >= minima ? 6 : 5;
-
 
     var res = 
     {
@@ -86,9 +89,17 @@ class BicepCurl
 
   open_not_reach_start()
   {
-    if(this.start_achieved_)
+    if(!this.start_achieved_)
     {
-      console.log("start to close the angle");
+      console.log("start to open the angle");
+    }
+    else if(!this.midpoint_achieved_)
+    {
+      console.log("start closing the angle");
+    }
+    else
+    {
+      console.log("open angle to complete the rep");
     }
     this.opening = true;
   }

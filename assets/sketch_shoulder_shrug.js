@@ -9,7 +9,7 @@ function setup() {
   createCanvas(710, 400);
   // specify multiple formats for different browsers
   fingers = createVideo(['test.webm']);
-  
+  // fingers = createCapture(VIDEO);
   fingers.size(width, height);
   fingers.speed(0.75);
   fingers.volume(0);
@@ -19,11 +19,10 @@ function setup() {
   exercise = new BicepCurl();
   poseNet = ml5.poseNet(fingers, modelReady);
 
-poseNet.on('pose', function(results) {
-  
+  poseNet.on('pose',  function(results) {
     poses = results;
-  });
-fingers.hide();
+    });
+  fingers.hide();
 }
 
 function draw() {
@@ -47,7 +46,10 @@ function mousePressed() {
     // fingers.loop(); // set the video to loop and start playing
 }
 
-
+function mouseReleased()
+{
+  fingers.pause();
+}
 
 function modelReady() {
   console.log("start");
