@@ -8,30 +8,36 @@ let exercise = null;
 function setup() {
   createCanvas(710, 400);
   // specify multiple formats for different browsers
-  fingers = createVideo(['test.webm']);
-  // fingers = createCapture(VIDEO);
-  fingers.size(width, height);
-  fingers.speed(0.75);
-  fingers.volume(0);
+  // fingers = createVideo(['test.webm']);
+  fingers = createCapture(VIDEO);
+  // fingers.size(width, height);
+  // fingers.speed(0.75);
+  // fingers.volume(0);
   fingers.hide(); // by default video shows up in separate dom
                   // element. hide it and draw it to the canvas
                   // instead
   exercise = new BicepCurl();
-  poseNet = ml5.poseNet(fingers, modelReady);
+  poseNet = ml5.poseNet(fingers,"single", modelReady);
 
   poseNet.on('pose',  function(results) {
     poses = results;
     });
-  fingers.hide();
+  // fingers.hide();
 }
 
 function draw() {
   image(fingers, 0, 0, width, height); // draw the video frame to canvas
-  drawKeypoints();
+  var bicep_angle = getAngle(1);
+  var elbow_angle = getAngle(2);
+  var main_point = exercise.main_point(bicep_angle);
+  var elbow_out = exercise.check_elbow(elbow_angle);
+
+  drawKeypoints(main_point,elbow_out);
   drawSkeleton();
+  
   if(angles.length<50)
   {
-    angles.push(getAngle());
+    angles.push(bicep_angle);
   }
   else
   {
@@ -58,7 +64,7 @@ function modelReady() {
 }
 
 // A function to draw ellipses over the detected keypoints
-function drawKeypoints()  {
+function drawKeypoints(main_point,elbow_out)  {
   // Loop through all the poses detected
   for (let i = 0; i < poses.length; i++) {
     // For each pose detected, loop through all the keypoints
@@ -66,7 +72,22 @@ function drawKeypoints()  {
     for (let j = 0; j < pose.keypoints.length; j++) {
       // A keypoint is an object describing a body part (like rightArm or leftShoulder)
       let keypoint = pose.keypoints[j];
-      fill(255, 0, 0);
+      if (main_point!=0)
+      {
+      fill(0,255, 0);  
+      }
+      else
+      {
+        fill(255, 0, 0);
+      }
+
+      // Check elbow
+      if (keypoint.part=="leftElbow") {
+        if (elbow_out){
+          fill(255,200,0);   
+        }
+      }
+      
       noStroke();
       ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
     }
@@ -100,7 +121,7 @@ function angle(A, B, C){
     return angle*180/Math.PI;
 }
 
-function getAngle() {
+function getAngle(part) {
     
       for (let i = 0; i < poses.length; i++) {
       let pose = poses[0].pose;
@@ -116,7 +137,16 @@ function getAngle() {
       let lh = pose.keypoints.find( obj => {
           return obj.part === 'leftHip'
       })
-      return angle(lw.position,le.position,ls.position);
+
+      switch(part)
+      {
+        case 1 : return angle(lw.position,le.position,ls.position);
+        break;
+        case 2 : return angle(le.position,ls.position,{x:ls.position.x,y:(ls.position.y+100)});
+        break;
+        default : return angle(lw.position,le.position,ls.position);
+      }
+      
       
     }
   }

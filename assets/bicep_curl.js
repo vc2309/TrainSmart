@@ -7,8 +7,15 @@ class BicepCurl
     this.rep = 0;
     this.start_ = 140;
     this.end_ = 65;
+    this.elbow_ = 15;
     this.midpoint_achieved_ = false;
     this.start_achieved_ = false;
+  }
+
+  main_point(angle)
+  {
+    var res = (angle>=(this.start_-2) || angle<=this.end_+2) ? ((angle<=this.end_+2)? 2 : 1) : 0;
+    return res;
   }
 
   analyze_angles(angles)
@@ -170,6 +177,17 @@ class BicepCurl
       break;
       default : this.wavering_motion();
     }
+  }
+
+  check_elbow(elbow_angle)
+  {
+      // console.log("an",elbow_angle)
+      if(elbow_angle>=this.elbow_)
+      {
+        return true;
+      }
+      return false;
+    
   }
 
 }
