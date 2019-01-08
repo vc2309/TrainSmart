@@ -5,6 +5,18 @@ let elbow_array = [];
 let bcurl = true;
 let angles = [];
 let exercise = null;
+let poseNetOptions = { 
+ imageScaleFactor: 1,
+ outputStride: 10,
+ flipHorizontal: false,
+ minConfidence: 0.5,
+ maxPoseDetections: 1,
+ scoreThreshold: 0.5,
+ nmsRadius: 200,
+ detectionType: 'single',
+ multiplier: 0.25,
+}
+
 function setup() {
   createCanvas(710, 400);
   // specify multiple formats for different browsers
@@ -22,7 +34,6 @@ function setup() {
   poseNet.on('pose',  function(results) {
     poses = results;
     });
-  // fingers.hide();
 }
 
 function draw() {
