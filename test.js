@@ -16,7 +16,7 @@ function setup() {
                   // instead
   poseNet = ml5.poseNet(fingers, modelReady);
 poseNet.on('pose', function(results) {
-  fingers.loop();
+  // fingers.loop();
     poses = results;
   });
 fingers.hide();
