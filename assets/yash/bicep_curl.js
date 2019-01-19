@@ -178,7 +178,8 @@ class BicepCurl
     }
   }
 
-  track_motion(angles){
+  track_motion(angles)
+  {
     var res = this.analyze_angles(angles);
 
     switch(res.type)

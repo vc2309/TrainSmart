@@ -30,7 +30,6 @@ function modelReady() {
   select('#status').html('Model Loaded');
 }
 
-
 function draw() {
   console.log('in draw')
   image(video, 0, 0, width, height);

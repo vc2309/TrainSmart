@@ -18,60 +18,72 @@
 
 <a href='' id="download">Download</a>
 <button id="stop">Stop
-<script src="sketch_shoulder_shrug.js"></script>
-<script src="bicep_curl.js"></script>
+<!-- <script src="sketch_shoulder_shrug.js"></script>
+<script src="bicep_curl.js"></script> -->
 
 </body>
 
 </html>
 
 
-<!-- <script>
+<script>
 
-  var player = document.getElementById('player');
-  var player1 = document.getElementById('player1');
-  let shouldStop = false;
-  let stopped = false;
-  const downloadLink = document.getElementById('download');
-  const stopButton = document.getElementById('stop');
+function makeid() {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-  stopButton.addEventListener('click', function() {
-    shouldStop = true;
-    console.log('entered here 1');
-  })
+  for (var i = 0; i < 5; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
 
-  var handleSuccess = function(stream) {
-    console.log('entered here 2 ');
-    player.srcObject = stream;
-    const options = {mimeType: 'video/webm'};
-    const recordedChunks = [];
-    const mediaRecorder = new MediaRecorder(stream, options);
+  return text;
+}
+var player = document.getElementById('player');
+// var player1 = document.getElementById('player1');
+let shouldStop = false;
+let stopped = false;
+const downloadLink = document.getElementById('download');
+const stopButton = document.getElementById('stop');
 
-    mediaRecorder.addEventListener('dataavailable', function(e) {
-        console.log('here');
-      if (e.data.size > 0) {
-        recordedChunks.push(e.data);
-      }
+stopButton.addEventListener('click', function() {
+  shouldStop = true;
+  console.log('entered here 1');
+})
 
-      if(shouldStop === true && stopped === false) {
-        mediaRecorder.stop();
-        stopped = true;
-        console.log('entered here');
-      }
-    });
+var handleSuccess = function(stream) {
+  console.log('entered here 2 ');
+  player.srcObject = stream;
+  const options = {mimeType: 'video/webm'};
+  const recordedChunks = [];
+  const mediaRecorder = new MediaRecorder(stream, options);
 
-    mediaRecorder.addEventListener('stop', function() {
-      // downloadLink.href = URL.createObjectURL(new Blob(recordedChunks));
-      // player1.srcObject = URL.createObjectURL(new Blob(recordedChunks));
-      // downloadLink.download = 'acetest.webm';
-      player1.src = URL.createObjectURL(new Blob(recordedChunks));
-      player1.play();
-    });
+  mediaRecorder.addEventListener('dataavailable', function(e) {
+      console.log('here');
+    if (e.data.size > 0) {
+      recordedChunks.push(e.data);
+    }
 
-    mediaRecorder.start(1000);
-  };
+    if(shouldStop === true && stopped === false) {
+      mediaRecorder.stop();
+      stopped = true;
+      console.log('entered here');
+    }
+ });
 
-  navigator.mediaDevices.getUserMedia({ audio: true, video: true })
-      .then(handleSuccess);
+  mediaRecorder.addEventListener('stop', function() {
+     console.log('enetered here 2');
+    downloadLink.href = URL.createObjectURL(new Blob(recordedChunks));
+    // player1.srcObject = URL.createObjectURL(new Blob(recordedChunks));
+    temp = makeid();
+    downloadLink.download = temp + '.webm';
+    // sleep()
+    $('#download')[0].click();
+    window.location = '/home?id=' + temp
+  });
 
-</script> -->
+  mediaRecorder.start(1000);
+};
+
+navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+    .then(handleSuccess);
+
+</script>
