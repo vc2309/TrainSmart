@@ -1,4 +1,4 @@
-class BicepCurl
+class FrontRaise
 {
   constructor()
   {
@@ -11,30 +11,29 @@ class BicepCurl
     this.midpoint_achieved_ = false;
     this.start_achieved_ = false;
   }
-  // closing point and opening point of bicep curl
-  main_point(angle)
-  {
-      res = 0
-      if ((angle>=(this.start_-2) || angle<=this.end_+2)){
-          if ((angle<=this.end_+2)){
-              res = 2;
-          }
-          else res = 1
-      }
-    // var res = (angle>=(this.start_-2) || angle<=this.end_+2) ? ((angle<=this.end_+2)? 2 : 1) : 0;
-    return res;
-  }
+
+  // main_point(angle)
+  // {
+  //     res = 0
+  //     if ((angle>=(this.start_-2) || angle<=this.end_+2)){
+  //         if ((angle<=this.end_+2)){
+  //             res = 2;
+  //         }
+  //         else res = 1
+  //     }
+  //   // var res = (angle>=(this.start_-2) || angle<=this.end_+2) ? ((angle<=this.end_+2)? 2 : 1) : 0;
+  //   return res;
+  // }
 
   analyze_angles(angles)
   {
-    var maxima = Number.MIN_SAFE_INTEGER;
-    var minima = Number.MAX_SAFE_INTEGER;
-    var opening = false;
-    var closing = false;
+    var maxima = Number.MIN_SAFE_INTEGER; // at top
+    var minima = Number.MAX_SAFE_INTEGER; // at bottom
+    var opening = false; //top
+    var closing = false; //bottom
     var last_open = undefined;
     this.last_angle = angles[angles.length - 1];
-    for (var i = angles.length - 1; i >= 0; i--)
-    {
+    for (var i = angles.length - 1; i >= 0; i--){
       if(maxima<angles[i])
       {
         maxima = angles[i];
@@ -62,7 +61,7 @@ class BicepCurl
     var type = 0;
     /**
     Types
-    1 : opening, not yet reaching start_ //
+    1 : opening, not yet reaching start_
     2 : opening, reaching start_
     3 : opening and closing, crossed start_
     4 : opening and closing, crossed end_
@@ -71,23 +70,9 @@ class BicepCurl
     7 : opening and closing, not crossing either
     */
 
-    if(opening && closing){
-        if(this.start_ <= maxima){
-            type = 3;
-        }
-        else if (this.end_ >= minima) {
-            type = 4;
-        }
-        else type = 7;
-    }
-    else if (opening){
-        if (this.start_ <= maxima){
-            type = 2;
-        }else type = 1;
-    }
-    else if (this.end_ >= minima){
-        type = 6;
-    } else type = 5;
+    if (opening && closing) type = this.start_ <= maxima ? 3 : (this.end_ >= minima ? 4 : 7)  ;
+    else if (opening) type = this.start_ <= maxima ? 2 : 1;
+    else type = this.end_ >= minima ? 6 : 5;
 
     var res =
     {
@@ -178,7 +163,8 @@ class BicepCurl
     }
   }
 
-  track_motion(angles)
+  // change this.
+    track_motion(angles)
   {
     const res = this.analyze_angles(angles);
 

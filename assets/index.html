@@ -7,14 +7,71 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/p5.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/addons/p5.dom.min.js"></script>
   <script src="https://unpkg.com/ml5@0.1.1/dist/ml5.min.js" type="text/javascript"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 </head>
 
 <body>
   <h1>PoseNet example using p5.js</h1>
   <p id='status'>Loading model...</p>
-  <script src="sketch_shoulder_shrug.js"></script>
-  <script src="bicep_curl.js"></script>
+
+<video id="player" controls="" ></video>
+
+<a href='' id="download">Download</a>
+<button id="stop">Stop
+<script src="sketch_shoulder_shrug.js"></script>
+<script src="bicep_curl.js"></script>
+
 </body>
 
 </html>
+
+
+<!-- <script>
+
+  var player = document.getElementById('player');
+  var player1 = document.getElementById('player1');
+  let shouldStop = false;
+  let stopped = false;
+  const downloadLink = document.getElementById('download');
+  const stopButton = document.getElementById('stop');
+
+  stopButton.addEventListener('click', function() {
+    shouldStop = true;
+    console.log('entered here 1');
+  })
+
+  var handleSuccess = function(stream) {
+    console.log('entered here 2 ');
+    player.srcObject = stream;
+    const options = {mimeType: 'video/webm'};
+    const recordedChunks = [];
+    const mediaRecorder = new MediaRecorder(stream, options);
+
+    mediaRecorder.addEventListener('dataavailable', function(e) {
+        console.log('here');
+      if (e.data.size > 0) {
+        recordedChunks.push(e.data);
+      }
+
+      if(shouldStop === true && stopped === false) {
+        mediaRecorder.stop();
+        stopped = true;
+        console.log('entered here');
+      }
+    });
+
+    mediaRecorder.addEventListener('stop', function() {
+      // downloadLink.href = URL.createObjectURL(new Blob(recordedChunks));
+      // player1.srcObject = URL.createObjectURL(new Blob(recordedChunks));
+      // downloadLink.download = 'acetest.webm';
+      player1.src = URL.createObjectURL(new Blob(recordedChunks));
+      player1.play();
+    });
+
+    mediaRecorder.start(1000);
+  };
+
+  navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+      .then(handleSuccess);
+
+</script> -->
